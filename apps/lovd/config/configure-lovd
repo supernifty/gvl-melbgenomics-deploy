@@ -1,0 +1,44 @@
+#!/bin/bash -x
+#--------------------------------------------------------
+# configuration for lovd
+# Peter Georgeson 1-Jun-2015
+#--------------------------------------------------------
+
+# save everything
+logfile=/tmp/lovd$$.log
+exec > $logfile 2>&1
+
+apt-get -y update
+apt-get -y install apache2 
+apt-get -y install php5 
+apt-get -y install libapache2-mod-php5 
+apt-get -y install php5-mcrypt
+apt-get -y install php5-mysql
+
+# cp and enable etc/apache2/sites-available
+cp /mnt/galaxy/apps/lovd/config/lovd.conf /etc/apache2/sites-available/lovd.conf
+#ln -s /etc/apache2/sites-available/lovd.conf /etc/apache2/sites-enabled/lovd.conf
+a2enmod rewrite
+a2ensite lovd
+# listen to 9630
+sed -i 's/Listen 80/Listen 9630/g' /etc/apache2/ports.conf
+service apache2 stop
+service apache2 start
+
+# create and configure database
+apt-get -y install debconf-utils
+debconf-set-selections <<< 'mysql-server mysql-server/root_password password universe'
+debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password universe'
+apt-get -y install mysql-client
+apt-get -y install mysql-server  
+service mysql start
+mysql -u root -puniverse < /mnt/galaxy/apps/lovd/config/auth.sql
+
+# lovd config php
+mysql -u lovd -plovd lovd < /mnt/galaxy/apps/lovd/config/db.sql
+
+# move database to volume
+#mv /var/lib/mysql/lovd /mnt/galaxy/apps/lovd/data
+#ln -s /mnt/galaxy/apps/lovd/data/lovd /var/lib/mysql/lovd
+
+service apache2 restart
