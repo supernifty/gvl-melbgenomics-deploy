@@ -1,0 +1,5 @@
+bucket_default: cloudman-gvl-400
+initial_cluster_type: Data
+galaxy_data_option: custom-size
+pss: 500
+post_start_script_url: 'https://swift.rc.nectar.org.au:8888/v1/AUTH_7ea859948c3a451c9baced6fee813ed1/install-cpipe-150609/install-cpipe-flavour.sh'
