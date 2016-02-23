@@ -23,6 +23,7 @@ sed -i "s#^BASE=.*#BASE=\"$TARGET\"#" $SOURCE/pipeline/config.groovy
 sed -i "s#^REFBASE=.*#REFBASE=\"$TARGET/hg19\"#" $SOURCE/pipeline/config.groovy
 sed -i "s#^ANNOVAR=.*#ANNOVAR=\"$TARGET/tools/annovar/2015-03-22\"#" $SOURCE/pipeline/config.groovy
 sed -i "s#^GATK=.*#GATK=\"$TARGET/tools/gatk/2.3.9\"#" $SOURCE/pipeline/config.groovy
+sed -i "s#^BWA_THREADS=.*#BWA_THREADS=\"2\"#" $SOURCE/pipeline/config.groovy
 
 # build an archive of cpipe in apps/cpipe
 #mv apps/cpipe/config/configure-cpipe.sh apps/cpipe/config/configure-cpipe
